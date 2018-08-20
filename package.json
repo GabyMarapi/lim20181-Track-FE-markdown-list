@@ -1,0 +1,29 @@
+{
+  "name": "lim20181-track-fe-markdown-list",
+  "version": "1.0.0",
+  "description": "[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado\r ligero muy popular entre developers. Es usado en muchísimas plataformas que\r manejan texto plano (GitHub, foros, blogs, ...), y es muy común\r encontrar varios archivos en ese formato en cualquier tipo de repositorio\r (empezando por el tradicional `README.md`).",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "jest": "^23.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabyMarapi/lim20181-Track-FE-markdown-list.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "md-link": "./index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/GabyMarapi/lim20181-Track-FE-markdown-list/issues"
+  },
+  "homepage": "https://github.com/GabyMarapi/lim20181-Track-FE-markdown-list#readme"
+}
