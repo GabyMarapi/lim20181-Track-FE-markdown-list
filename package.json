@@ -1,5 +1,8 @@
 {
   "name": "lim20181-track-fe-markdown-list",
+  "jest": {
+    "testURL": "http://localhost"
+  },
   "version": "1.0.0",
   "description": "[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado\r ligero muy popular entre developers. Es usado en muchísimas plataformas que\r manejan texto plano (GitHub, foros, blogs, ...), y es muy común\r encontrar varios archivos en ese formato en cualquier tipo de repositorio\r (empezando por el tradicional `README.md`).",
   "main": "index.js",
@@ -7,11 +10,17 @@
     "test": "test"
   },
   "dependencies": {
+    "babel-jest": "^23.4.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-install": "2.1.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-jest": "^23.2.0",
     "jest": "^23.5.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "mocha"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
