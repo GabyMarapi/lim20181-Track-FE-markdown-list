@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "md-link": "./index.js"
+    "md-link": "./cli.js"
   },
   "bugs": {
     "url": "https://github.com/GabyMarapi/lim20181-Track-FE-markdown-list/issues"

@@ -1,23 +1,7 @@
-#!/usr/bin/env node
-const [, , ...args] = process.argv
-
 const path = require('path'),
 	fs = require('fs'),
 	https = require('https'),
 	http = require('http')
-
-dirPath = args[0].replace("/", "\\\\");
-
-const [filePath, ...opts] = args
-console.log(filePath);
-
-const options = {
-	validate: null,
-	stats: null
-}
-
-opts.indexOf('--validate') === 1 ? options.validate = true : options.validate = false
-opts.indexOf('--stats') === 1 ? options.stats = true : options.stats = false
 
 let arryObjUrl = []
 const urlStatusOk = [];
@@ -48,35 +32,6 @@ const validateHttp = (arrObj) => {
 				}
 			})
 		})
-
-
-		/*return new Promise((resolve, reject) => {
-	
-			const arrPromises = urlArray.map(element => {
-				return new Promise((res, rej) => {
-					const urlDomainExists = (element, response) => {
-						res({
-							url: element,
-							statusMessage: response.statusMessage,
-							statusCode: response.statusCode
-						})
-					}
-					const urlDomainDoesNotExist = (element) => {
-						res({
-							url: element,
-							statusMessage: 'Domain does not exist',
-							statusCode: 'Domain does not exist'
-						})
-					}
-					if (element.substr(0, 5) === 'https') {
-						https.get(element, response => { urlDomainExists(element, response) })
-							.on('error', e => { urlDomainDoesNotExist(element) })
-					} else {
-						http.get(element, response => { urlDomainExists(element, response) })
-							.on('error', e => { urlDomainDoesNotExist(element) })
-					}
-				})
-			})*/
 		Promise.all(arrPromises).then(promiseUrls => {
 			const arr = []
 			promiseUrls.forEach(arrElement => {
@@ -98,20 +53,17 @@ const findUrlText = (arrObjPathData) => {
 				const arr = []
 				arrUrl.forEach(hrefElement => {
 					const splitElm = hrefElement.split('](')
-
 					arr.push({
 						href: splitElm[1],
 						file: objElm.path.replace("/", "\\\\"),
 						text: splitElm[0].slice(1),
 						statusMessage: null,
-						statusCode: null,
-						unique: null,
+						statusCode: null
 					})
 				})
 				resolve(arr)
 			})
 		})
-
 		Promise.all(arrPromises).then(arrElement => {
 			const arrObjHref = []
 			arrElement.forEach(elem => {
@@ -124,22 +76,30 @@ const findUrlText = (arrObjPathData) => {
 	})
 }
 const getFilesList = (dir) => {
+	const arrFiles = []
 	return new Promise((resolve, reject) => {
-		const arrFiles = []
-		const getFiles = (dir) => {
-			const files = fs.readdirSync(dir);
-
-			for (let file in files) {
-				let next = path.join(dir, files[file]);
-				fs.lstatSync(next).isDirectory() === true ? getFiles(next) : arrFiles.push(next)
-			}
+		if (fs.lstatSync(dir).isFile()) {
+			arrFiles.push(dir)
+			resolve(arrFiles)
 		}
-		getFiles(dir)
-		resolve(arrFiles);
+		else if (fs.lstatSync(dir).isDirectory()) {
+			const getFiles = (dir) => {
+				const files = fs.readdirSync(dir);
+
+				for (let file in files) {
+					let next = path.join(dir, files[file]);
+					fs.lstatSync(next).isDirectory() ? getFiles(next) : arrFiles.push(next)
+				}
+			}
+			getFiles(dir)
+			resolve(arrFiles);
+		}
+		else {
+			reject(Error('no es un archivo'))
+		}
 	})
 }
 
-//getFiles1('C:\\Users\\gmarapi\\Documents\\lim20181-Track-FE-markdown-list\\prueba')
 const validateFileMd = (arrFiles) => {
 	return new Promise((resolve, reject) => {
 		const filesMd = arrFiles.filter(elem => {
@@ -189,33 +149,45 @@ const validateOptions = (options) => {
 
 	}
 }
-const mdlinks = (path, object) => {
+exports.mdlinks = (path, options) => {
 	return new Promise((resolve, reject) => {
-		getFilesList(path).then(validateFileMd).then(readFileMd).then(findUrlText).then(validateHttp).then(r => {
-			
-			if (options.validate === 'true' && options.stats === 'true') {
-				resolve()
+		getFilesList(path).then(validateFileMd).then(readFileMd).then(findUrlText).then(validateHttp).then(result => {
+			const total = result.length
+			const broken = result.filter(elem => elem.statusMessage !== 'OK').length
+			const objUnique = {}
+			const obj = {}
+			result.forEach(elem => {
+				if (!objUnique.hasOwnProperty(elem.href)) {
+					objUnique[elem.href] = 0
+				}
+				objUnique[elem.href] = objUnique[elem.href] + 1
+			})
+			const unique = Object.keys(objUnique).filter((elem) => objUnique[elem] === 1).length
+
+			if (options.validate && options.stats) {
+				obj.total = total
+				obj.unique = unique
+				obj.broken = broken
+				resolve(obj)
 			}
-			else if (options.validate === 'true') {
-				resolve()
+			else if (options.validate) {
+				resolve(result)
 			}
-			else if (options.stats === 'true') {
-				resolve()
+			else if (options.stats) {
+				obj.total = total
+				obj.unique = unique
+				resolve(obj)
 			}
 			else {
-		
+				const arrValidateStats = result.map(elem => {
+					const newObj = {}
+					newObj.href = elem.href
+					newObj.file = elem.file
+					newObj.text = elem.text
+					return newObj
+				})
+				resolve(arrValidateStats)
 			}
-			console.log(r);
-
 		})
 	})
 }
-mdlinks(filePath, options)
-
-
-
-
-
-//export{mdlinks}
-
-

@@ -134,3 +134,32 @@ mdlinks('./read.md', 'a').then(result=>{
 //export{mdlinks}
 
 
+		/*const getFiles = (dir) => {
+			return new Promise((resolve, reject) => {
+
+				const files = fs.readdir(dir, 'utf8', (err, files) => {
+					if (err) {
+						throw new Error('Failed ')
+					} else {
+						files.forEach(file => {
+							let next = path.join(dir, file);
+							fs.lstatSync(next).isDirectory() === true 
+							? arrFiles.push(getFiles(next)) 
+							: arrFs.push(next)
+						})
+						resolve(arrFs)
+					}
+				})
+				console.log(arrFiles.length);
+				console.log('a')
+			})
+			
+		}
+		arrFiles.push(getFiles(dir))
+		console.log(arrFiles.length);
+		Promise.all(arrFiles).then(r => {
+			console.log(r);
+			resolve(r)
+		})*/
+
+		//fs.lstat(next, (err, stats) => {stats.isDirectory() === true ? getFiles(next): arrFs.push(next)})

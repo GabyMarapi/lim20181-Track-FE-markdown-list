@@ -92,7 +92,7 @@ const readFileMd = () => {
 
 
 const uniqueLink = () => {
-    let ages = [3, 10, 18, 18, 20, 3, 18,18, 9, 3, 9];
+    let ages = [{f:3}, 10, 18, 18, 20, 3, 18,18, 9, 3, 9];
     const contador = {};
     ages.forEach((elem) => {
         if (!contador.hasOwnProperty(elem)) {
