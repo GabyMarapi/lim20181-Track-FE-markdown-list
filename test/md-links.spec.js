@@ -1,5 +1,6 @@
 import * as moduls from '../index'
 
+
 //const funTest = require('../index')
 
 describe('Funcion mdLinks', () => {
@@ -7,39 +8,106 @@ describe('Funcion mdLinks', () => {
     it('Debería se una función', () => {
         return expect(typeof moduls.mdlinks).toEqual('function')
     });
-    it('Debería retornar una promesa', () => {
-        // return expect(typeof moduls.mdlinks(3,'a').then()).toBeTruthy()
-    });
-    it('La promesa deberia retornar una array', () => {
-        return moduls.mdlinks(2, 'a')
-            .then(result => {
-                expect(result).toEqual([{ href: 'href', text: 'text', file: 'file' }])
-            })
-    });
 
     describe('Probando funciones mdLinks', () => {
 
-        it('mdLinks("./some/example.md").then() debería retornar [{ href, text, file }]', () => {
-            //mdLinks().then
+        it('mdLinks(".\\test\\prueba").then() debería retornar [{ href,file,text }]', () => {
+            const options = {
+                stats: false,
+                validate: false
+            }
+            return moduls.mdlinks('.\\test\\prueba\\prueba.md', options)
+                .then(result => {
+                    expect(result[0])
+                        .toEqual(
+                            {
+                                href: 'https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback',
+                                file: '.\\test\\prueba\\prueba.md',
+                                text: 'Leer un Directorio'
+                            }
+                        )
+                })
 
         });
-        it('mdLinks("./some/example.md", { validate: true }).then() debería retornar [{ href, text, file, status, ok }]', () => {
-            //mdLinks().then
+        statusCode: 200
+        it('mdLinks(".\\test\\prueba", { validate: true }).then() debería retornar [{ href,file,text,statusMessage,statusCode }]',
+            () => {
+                const options = {
+                    stats: false,
+                    validate: true
+                }
+                return moduls.mdlinks('.\\test\\prueba', options)
+                    .then(result => {
+                        expect(result[0])
+                            .toEqual(
+                                {
+                                    href: 'https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback',
+                                    file: 'test\\prueba\\prueba.md',
+                                    text: 'Leer un Directorio',
+                                    statusMessage: 'OK',
+                                    statusCode: 200
+                                }
+                            )
+                    })
 
-        });
-        it('mdLinks("./some/example.md", { stats: true }).then() debería retornar [{ href, text, file, total, unique, domains }]', () => {
-            //mdLinks().then
+            });
+        it('mdLinks(".\\test\\prueba", { stats: true }).then() debería retornar { total, unique }',
+            () => {
+                const options = {
+                    stats: true,
+                    validate: false
+                }
+                return moduls.mdlinks('.\\test\\prueba', options)
+                    .then(result => {
+                        expect(result)
+                            .toEqual(
+                                {
+                                    total: 7,
+                                    unique: 5
+                                }
+                            )
+                    })
 
-        });
-        it('mdLinks("./some/dir")).then() debería retornar [{ href, text, file }]', () => {
-            //mdLinks().then
+            });
+        it('mdLinks(".\\test\\prueba", { stats: true, validate: true }).then() debería retornar { total, unique, broken }',
+            () => {
+                const options = {
+                    stats: true,
+                    validate: true
+                }
+                return moduls.mdlinks('.\\test\\prueba', options)
+                    .then(result => {
+                        expect(result)
+                            .toEqual(
+                                {
+                                    total:7,
+                                    unique: 5,
+                                    broken: 5
+                                }
+                            )
+                    })
 
-        });
-        it('path deberia diferenciar entre un absoluto y un relativo', () => {
-            //mdLinks().then
-            //absoiluto = 
+            });
+        it('mdLinks(".\\test\\prueba")).then() debería retornar [{ href,file,text }]',
+            () => {
+                const options = {
+                    stats: false,
+                    validate: false
+                }
+                return moduls.mdlinks('.\\test\\prueba', options)
+                    .then(result => {
+                        expect(result[0])
+                            .toEqual(
+                                {
+                                    href: 'https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback',
+                                    file: 'test\\prueba\\prueba.md',
+                                    text: 'Leer un Directorio'
+                                }
+                            )
+                    })
 
-        });
+            });
+
     });
 
 });

@@ -134,7 +134,7 @@ mdlinks('./read.md', 'a').then(result=>{
 //export{mdlinks}
 
 
-		/*const getFiles = (dir) => {
+		const getFiles = (dir) => {
 			return new Promise((resolve, reject) => {
 
 				const files = fs.readdir(dir, 'utf8', (err, files) => {
@@ -160,6 +160,83 @@ mdlinks('./read.md', 'a').then(result=>{
 		Promise.all(arrFiles).then(r => {
 			console.log(r);
 			resolve(r)
-		})*/
+		})
 
 		//fs.lstat(next, (err, stats) => {stats.isDirectory() === true ? getFiles(next): arrFs.push(next)})
+
+
+		
+const path = require('path'),
+fs = require('fs')
+
+const fsStats = (path) => new Promise((resolve, reject) => {
+fs.lstat(path, (err, stats) => (err ? reject(new Error('No es un archivo')) : resolve(stats)
+))
+})
+
+const isFile = (stats) => stats.isFile(3)
+
+const isDirectory = (stats) => stats.isDirectory()
+
+const fsReadDir = (dir) => new Promise((resolve, reject) => {
+fs.readdir(dir, (err, files) => (err ? reject(new Error('No es un archivo')) : resolve(files)
+))
+}).then(result => result.map(elem => path.join(dir, elem)))
+
+
+const getFilesList = (path) => new Promise((resolve, reject) => {
+fsStats(path)
+	.catch(err => console.log(err.message))
+})
+
+/*
+const recursividad = (dir) => new Promise((resolve, reject) => {
+fsReadDir(dir).then(result => {
+	result.forEach(elem => {
+		fsStats(absolute).then(isFile) ? resolve(absolute) : recursividad(absolute)
+	})
+})
+})*/
+const filerFiles = (paths) => {
+const a= paths.filter(elem => fsStats(elem).then(isFile))
+console.log(a);
+
+return a
+}
+//Promise.all(paths.filter(elem => fsStats(elem).then(isFile)))
+
+const filerDirectories = (paths) => paths.filer(elem => fsStats(elem).then(isDirectory))
+
+//fsStats('C:\\Users\\gmarapi\\Documents\\lim20181-Track-FE-markdown-list\\prueba').then(isFile)
+
+
+
+const getFiles = (dir) => {
+fsReadDir(dir).then(dirContents).catch(e => console.log(e.message))
+}
+//fsReadDir('C:\\Users\\gmarapi\\Documents\\lim20181-Track-FE-markdown-list\\prueba').then(filerFiles).then(console.log)
+
+//getFiles('C:\\Users\\gmarapi\\Documents\\lim20181-Track-FE-markdown-list\\prueba')
+/*	const arrFiles = []
+return new Promise((resolve, reject) => {
+	if (fs.lstatSync(dir).isFile()) {
+		arrFiles.push(dir)
+		resolve(arrFiles)
+	}
+	else if (fs.lstatSync(dir).isDirectory()) {
+		const getFiles = (dir) => {
+			const files = fs.readdir(dir);
+
+			for (let file in files) {
+				let next = path.join(dir, files[file]);
+				fs.lstatSync(next).isDirectory() ? getFiles(next) : arrFiles.push(next)
+			}
+		}
+		getFiles(dir)
+		resolve(arrFiles);
+	}
+	else {
+		reject(new Error('no es un archivo'))
+	}
+})
+}*/

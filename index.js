@@ -33,11 +33,7 @@ const validateHttp = (arrObj) => {
 			})
 		})
 		Promise.all(arrPromises).then(promiseUrls => {
-			const arr = []
-			promiseUrls.forEach(arrElement => {
-				arr.push(arrElement)
-			})
-			resolve(arr)
+			resolve(promiseUrls)
 		})
 
 	})
@@ -134,21 +130,7 @@ const readFileMd = (filesExtendMd) => {
 		})
 	})
 }
-const validateOptions = (options) => {
-	let flagOptions = null
-	if (options.validate === 'true' && options.stats === 'true') {
-		return flagOptions = 1
-	}
-	else if (options.validate === 'true') {
-		return flagOptions = 2
-	}
-	else if (options.stats === 'true') {
-		return flagOptions = 3
-	}
-	else {
 
-	}
-}
 exports.mdlinks = (path, options) => {
 	return new Promise((resolve, reject) => {
 		getFilesList(path).then(validateFileMd).then(readFileMd).then(findUrlText).then(validateHttp).then(result => {

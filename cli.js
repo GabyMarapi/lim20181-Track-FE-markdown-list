@@ -13,6 +13,8 @@ opts.indexOf('--validate') !== -1 ? options.validate = true : options.validate =
 opts.indexOf('--stats') !== -1 ? options.stats = true : options.stats = false
 
 modules.mdlinks(filePath, options).then(result => {
+	console.log(result);
+	
 	if (options.validate && options.stats) {
 		console.log(` Total: ${result.total} \n Unique: ${result.unique} \n Broken: ${result.broken}`)
 	}
