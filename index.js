@@ -135,16 +135,20 @@ const mdlinks = (path, options) => {
 	return new Promise((resolve, reject) => {
 		getFilesList(path).then(validateFileMd).then(readFileMd).then(findUrlText).then(validateHttp).then(result => {
 			const total = result.length
-			const broken = result.filter(elem => elem.statusMessage !== 'OK').length
+			const broken = result.filter(elem => elem.statusCode !== 200).length
 			const objUnique = {}
-			const obj = {}
+            const obj = {}
+            
 			result.forEach(elem => {
 				if (!objUnique.hasOwnProperty(elem.href)) {
 					objUnique[elem.href] = 0
-				}
-				objUnique[elem.href] = objUnique[elem.href] + 1
-			})
-			const unique = Object.keys(objUnique).filter((elem) => objUnique[elem] === 1).length
+                }
+                else{
+                    objUnique[elem.href] = objUnique[elem.href] + 1
+                }
+            })
+            
+			const unique = Object.keys(objUnique).filter((elem) => objUnique[elem] === 0).length
 
 			if (options.validate && options.stats) {
 				obj.total = total

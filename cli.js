@@ -46,6 +46,7 @@ opts.indexOf('--stats') !== -1 ? options.stats = true : options.stats = false
 
 if (flagOptions === 1) {
 	mdlinks(filePath, options).then(result => {
+console.log(result);
 
 		if (options.validate && options.stats) {
 			console.log(` Total: ${result.total} \n Unique: ${result.unique} \n Broken: ${result.broken}`)
