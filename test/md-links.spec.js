@@ -1,12 +1,10 @@
-import * as moduls from '../index'
+const mdlinks = require('../index')
 
-
-//const funTest = require('../index')
 
 describe('Funcion mdLinks', () => {
 
     it('Debería se una función', () => {
-        return expect(typeof moduls.mdlinks).toEqual('function')
+        return expect(typeof mdlinks).toEqual('function')
     });
 
     describe('Probando funciones mdLinks', () => {
@@ -16,7 +14,7 @@ describe('Funcion mdLinks', () => {
                 stats: false,
                 validate: false
             }
-            return moduls.mdlinks('.\\test\\prueba\\prueba.md', options)
+            return mdlinks('.\\test\\prueba\\prueba.md', options)
                 .then(result => {
                     expect(result[0])
                         .toEqual(
@@ -36,7 +34,7 @@ describe('Funcion mdLinks', () => {
                     stats: false,
                     validate: true
                 }
-                return moduls.mdlinks('.\\test\\prueba', options)
+                return mdlinks('.\\test\\prueba', options)
                     .then(result => {
                         expect(result[0])
                             .toEqual(
@@ -57,7 +55,7 @@ describe('Funcion mdLinks', () => {
                     stats: true,
                     validate: false
                 }
-                return moduls.mdlinks('.\\test\\prueba', options)
+                return mdlinks('.\\test\\prueba', options)
                     .then(result => {
                         expect(result)
                             .toEqual(
@@ -75,12 +73,12 @@ describe('Funcion mdLinks', () => {
                     stats: true,
                     validate: true
                 }
-                return moduls.mdlinks('.\\test\\prueba', options)
+                return mdlinks('.\\test\\prueba', options)
                     .then(result => {
                         expect(result)
                             .toEqual(
                                 {
-                                    total:7,
+                                    total: 7,
                                     unique: 5,
                                     broken: 5
                                 }
@@ -94,7 +92,7 @@ describe('Funcion mdLinks', () => {
                     stats: false,
                     validate: false
                 }
-                return moduls.mdlinks('.\\test\\prueba', options)
+                return mdlinks('.\\test\\prueba', options)
                     .then(result => {
                         expect(result[0])
                             .toEqual(

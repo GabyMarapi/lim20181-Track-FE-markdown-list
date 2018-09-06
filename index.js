@@ -131,7 +131,7 @@ const readFileMd = (filesExtendMd) => {
 	})
 }
 
-exports.mdlinks = (path, options) => {
+const mdlinks = (path, options) => {
 	return new Promise((resolve, reject) => {
 		getFilesList(path).then(validateFileMd).then(readFileMd).then(findUrlText).then(validateHttp).then(result => {
 			const total = result.length
@@ -173,3 +173,5 @@ exports.mdlinks = (path, options) => {
 		})
 	})
 }
+
+module.exports = mdlinks
