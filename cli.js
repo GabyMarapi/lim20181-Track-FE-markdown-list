@@ -13,7 +13,7 @@ const mdlinks = require('./index')
 let flagOptions = 1
 
 const msmError = () => {
-	console.log('Error en el ingreso, se sugiere utilizar --validate / --stats / --validate --stats')
+	console.log('Error en el ingreso, se sugiere utilizar --validate /  --stats /  --validate --stats /  --validate --stats')
 	flagOptions = 2
 }
 
@@ -46,7 +46,6 @@ opts.indexOf('--stats') !== -1 ? options.stats = true : options.stats = false
 
 if (flagOptions === 1) {
 	mdlinks(filePath, options).then(result => {
-console.log(result);
 
 		if (options.validate && options.stats) {
 			console.log(` Total: ${result.total} \n Unique: ${result.unique} \n Broken: ${result.broken}`)

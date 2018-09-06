@@ -1,324 +1,402 @@
-# Markdown Links
+# Data Dashboard
 
 ## Preámbulo
 
-[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado
-ligero muy popular entre developers. Es usado en muchísimas plataformas que
-manejan texto plano (GitHub, foros, blogs, ...), y es muy común
-encontrar varios archivos en ese formato en cualquier tipo de repositorio
-(empezando por el tradicional `README.md`).
+En Laboratoria, las Training Managers (TMs) hacen un gran trabajo al analizar la
+mayor cantidad de datos posibles respecto al desempeño de las estudiantes para
+apoyarlas en su aprendizaje.
 
-Estos archivos `Markdown` normalmente contienen _links_ (vínculos/ligas) que
-muchas veces están rotos o ya no son válidos y eso perjudica mucho el valor de
-la información que se quiere compartir.
+Desde hace unos meses tenemos un sistema donde nuestras estudiantes acceden a
+contenidos de aprendizaje (lecturas, ejercicios, quizzes, ...), nuestro LMS, el
+cual acumula data sobre quién leyó qué, qué ejercicios se han completado y los
+resultados de los quizzes, ...
 
-Dentro de una comunidad de código abierto, nos han propuesto crear una
-herramienta usando [Node.js](https://nodejs.org/), que lea y analice archivos
-en formato `Markdown`, para verificar los links que contengan y reportar
-algunas estadísticas.
-
-![md-links](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)
+Al ser todavía una aplicación en su infancia, el LMS por ahora no implementa una
+visualización de esta data que permita a las TMs ver fácilmente el avance de las
+estudiantes con respecto a estos contenidos. Así que nos han pedido que
+construyamos una interfaz donde pueden _ver_ y _usar_ esa data y que así puedan
+tomar decisiones de una forma más informada. Para ello hemos propuesto crear un
+data dashboard.
 
 ## Introducción
 
-[Node.js](https://nodejs.org/es/) es un entorno de ejecución para JavaScript
-construido con el [motor de JavaScript V8 de Chrome](https://developers.google.com/v8/).
-Esto nos va a permitir ejecuta JavaScript en el entorno del sistema operativo,
-ya sea tu máquina o un servidor, lo cual nos abre las puertas para poder interactuar con
-el sistema operativo, sistema de archivos, redes, ...
-En este proyecto nos alejamos un poco del navegador para construir un programa
-que se ejecute usando Node.js, donde aprenderemos sobre cómo interactuar con el
-sistema archivos, con el entorno (proceso, env, stdin/stdout/stderr), ...
+Sí pensamos en un dashboard podemos pensar en el tablero de control de un auto
+o el de un avión. Un espacio desde el cuál un usuario puede tener acceso a la
+información y controles más relevantes, en este caso, del vehículo que está
+utilizando. El dashboard de un auto le permite a quien conduce saber a qué
+velocidad está yendo, qué cambio está utilizando, cuánto combustible tiene
+disponible, qué tan caliente está el motor, cuántas revoluciones por minuto
+dan las ruedas, cuánta distancia has recorrido, etc.
+
+[car dashboard](https://img.buzzfeed.com/buzzfeed-static/static/2017-02/7/12/enhanced/buzzfeed-prod-fastlane-03/original-17515-1486490056-3.jpg?crop=2041:1068;80,248)
+
+En el mundo de la web, también se utilizan dashboards, de hecho wikipedia nos
+dice que un dashboard puede ser un resumen gráfico de varias piezas de
+información importante, generalmente utilizadas para dar una visión general de
+una empresa o de un servicio. Así tenemos dashboards como el de
+[Google Analytics](https://assets.econsultancy.com/images/resized/0003/3813/mobile_commerce_dashboard-blog-full.png)
+o el de [Mailchimp.](https://blog.mailchimp.com/wp-content/uploads/2016/11/Dashboard-view-3-Copy-1008x768.jpg)
+
+Para el proyecto #2 del bootcamp propondrás y crearás un dashboard.
+
+[Contexto sobre el tema, importancia, historia, ...: data (arreglos, objetos),
+JSON, DOM, XHR.]
 
 ## Objetivos
 
-El objetivo práctico de este proyecto es que aprendas cómo crear tu propia
-**librería** (o biblioteca - _library_) en JavaScript.
-Diseñar tu propia librería es una experiencia fundamental para cualquier
-desarrollador porque que te obliga a pensar en la interfaz (API) de tus _módulos_
-y como será usado por otros developers, debes tener especial consideración en
-peculiaridades del lenguaje, convenciones y buenas prácticas.
+El objetivo principal de aprendizaje de este proyecto es construir una
+_interfaz_ web donde podamos visualizar y manipular data.
+
+Tópicos: _arrays_, _objects_, _dom_, _xhr_, ...
+
+Habilidades blandas:
+
+* Esperamos que en este proyecto puedas pensar en el cliente, entendiendo cuál
+  es mejor sistema de visualización del data dashboard según sus necesidades.
+* Nos interesa que logres entender a las necesidades de los usuarios para los
+  que crearás el producto y los ayudes a resolver esas necesidades.
+* Además, que puedas trabajar de manera colaborativa con tu pareja, buscando
+  feedback constante para realizar el proyecto.
 
 ## Consideraciones generales
 
-Este proyecto se debe "resolver" de manera individual.
-La librería debe estar implementada en JavaScript para ser ejecutada con
-Node.js.
+Este proyecto se debe "resolver" en parejas.
+
+La lógica del proyecto debe estar implementada completamente en JavaScript
+(ES6), HTML y CSS. En este proyecto NO está permitido usar librerías o
+frameworks, solo [vanilla JavaScript](https://es.wikipedia.org/wii).
+
+No se debe utilizar la _pseudo-variable_ `this`.
+
+Los tests unitarios deben cubrir un mínimo del 70% de _statements_, _functions_
+y _lines_, y un mínimo del 50% de _branches_. El _boilerplate_ ya contiene el
+setup y configuración necesaria para ejecutar los tests (pruebas) usando el
+comando `npm test`.
+
+Para comenzar este proyecto tendrás que hacer un _fork_ y _clonar_ este
+repositorio que contiene el _boilerplate_.
+
+El _boilerplate_ contiene una estructura de archivos como punto de partida así
+como toda la configuración de dependencias y tests de ejemplo:
+
+```text
+./
+├── .editorconfig
+├── .eslintrc
+├── .gitignore
+├── README.md
+├── data
+│   ├── cohorts
+│   │   └── lim-2018-03-pre-core-pw
+│   │       ├── progress.json
+│   │       └── users.json
+│   └── cohorts.json
+├── package.json
+├── src
+│   ├── data.js
+│   ├── index.html
+│   ├── main.js
+│   └── style.css
+└── test
+    ├── data.spec.js
+    ├── fixtures.js
+    ├── headless.js
+    └── index.html
+```
+
+La carpeta `data/` dentro del _boilerplate_ incluye un extracto de la data que
+podemos usar tanto en los tests como en la interfaz en sí.
 
 ## Parte obligatoria
 
-Módulo instalable via `npm install <github-user>/md-links`. Este módulo debe
-incluir tanto un ejecutable (_archivo cli_) que podamos invocar en
-la línea de comando como una interfaz que podamos importar con `require`
-para usarlo programáticamente.
+### Definición del producto
 
-Los tests unitarios deben cubrir un mínimo del 70% de _statements_, _functions_,
-_lines_ y _branches_. Te recomendamos explorar [Jest](https://jestjs.io/)
-para tus pruebas unitarias.
+En el `README.md` cuéntanos cómo pensaste y te acercaste a los usuarios al
+desarrollar tu producto y cuál fue tu proceso para definir el producto final a
+nivel de experiencia y de interfaz. Si tienes fotos de entrevistas,
+cuestionarios y/o sketches compártelos. Además, detalla:
 
-Para comenzar este proyecto tendrás que hacer un _fork_ y _clonar_ este
-repositorio.
+* quiénes son los principales usarios de producto
+* cuáles son los objetivos de estos usarios en relación con el producto
+* cuáles son los dato más relevantes que el usuario quiere ver en la interfaz y
+  por qué. Cómo los descubriste.
+* cuándo es que el usuario revisar normalmente estos datos
+* cómo crees que el producto que estás creando les está resolviendo sus
+  problemas
+* cómo fue tu proceso de diseño
 
-Antes de comenzar a codear, es necesario crear un plan de acción. Esto debería
-quedar detallado en el `README.md` de tu repo y en una serie de _issues_
-y _milestones_ para priorizar y organizar el trabajo, y para poder hacer
-seguimiento de tu progreso.
+### UI
 
-Dentro de cada _milestone_ se crearán y asignarán los _issues_ que cada quien
-considere necesarios.
+La interfaz debe permitir al usuario:
 
-Para este proyecto necesitarás revisar los siguientes tópicos
+* Listar/seleccionar cohorts
+* Dentro de cada cohort:
+  - Listar alumnas
+  - Para cada alumna:
+    + Calcular porcentaje de completitud de todos los _cursos_ por alumna.
+    + Calcular grado de completitud de _lecturas_, _ejercicios autocorregidos_,
+      y _quizzes_.
+  - Ordenar alumnas por completitud _general_ (porcentaje consumido/completado
+    de todos los cursos del cohort en cuestión), de _lecturas_, _ejercicios
+    autocorregidos_ y _quizzes_ (tanto por completitud - cuántos quizzes ha
+    completado del total - como por puntuación promedio de los quizzes
+    completados).
+  - Filtrar/buscar alumnas por nombre
+* Mostrar los datos más relevantes primero
+* Utiliza la interfaz sin problemas desde distintos tamaños de pantallas:
+  móviles, tablets, desktops
 
-Tópicos:
+Además, la interfaz deberá seguir los fundamentos de visual design como
+contraste, alineación, jerarquía, entre otros.
 
-- [Node.js](https://nodejs.org/en/)
-- [Node.js y npm](https://www.genbeta.com/desarrollo/node-js-y-npm)
-- [Módulos, librerías, paquetes, frameworks... ¿cuál es la diferencia?](http://community.laboratoria.la/t/modulos-librerias-paquetes-frameworks-cual-es-la-diferencia/175)
-- [Módulos(CommonJS)](https://nodejs.org/docs/latest-v0.10.x/api/modules.html)
-- [Semver](https://semver.org/)
-- [Path](https://nodejs.org/api/path.html)
-- [File System](https://nodejs.org/api/fs.html)
-- [marked](https://github.com/markedjs/marked)
-- [Asíncronía en js](https://carlosazaustre.com/manejando-la-asincronia-en-javascript/)
+## Implementación
 
-### Documentación requerida
+El corazón de este proyecto es la manipulación de datos a través de arreglos y
+objetos. El _boilerplate_ incluye tests que esperan que implementes las
+siguientes 4 funciones y las _exportes_ al entorno global (`window`) dentro del
+script `src/data.js`:
 
-En el archivo _README_ de tu proyecto tendrás que incluir:
+### `computeUsersStats(users, progress, courses)`
 
-- Descripción general de la librería.
-- Instrucciones de instalación.
-- Versiones de la librería.
-- Documentación de la Librería (Features, link de Demo, test, etc...).
-- Ejemplos (_snippets_) de uso.
+Esta función es la responsable de "crear" la lista de usuarios (estudiantes)
+que vamos a "pintar" en la pantalla. La idea es "recorrer" el arreglo de
+usuarios (`users`) y calcular los indicadores necesarios de progreso para cada
+uno. La función debe devolver un nuevo arreglo de usuarios donde a cada objeto
+de usuario se le debe agregar una _propiedad_ con el nombre `stats` con las
+estadísticas calculadas.
 
-Y todo lo relevante para que cualquier developer que quiera usar tu librería pueda hacerlo sin inconvenientes
+#### Argumentos
 
-### Archivos del proyecto
+* `users`: Arreglo de objetos obtenido de la data en bruto.
+* `progress`: Objeto de progreso en bruto. Contiene una llave para cada usuario
+  (`uid`) con un objeto que contiene el progreso del usuario para cada curso.
+* `courses`: Arreglo de _strings_ con los _ids_ de los cursos del cohort en
+  cuestión. Esta data se puede extraer de la propiedad `coursesIndex` de los
+  objetos que representan los _cohorts_.
 
-- `README.md` con descripción del módulo, instrucciones de instalación, uso y
-  documentación del API.
-- `index.js`: Desde este archivo debes exportar una función (`mdLinks`).
-- `package.json` con nombre, versión, descripción, autores, licencia,
-  dependencias, scripts (pretest, test, ...)
-- `.editorconfig` con configuración para editores de texto. Este archivo no se
-  debe cambiar.
-- `.eslintrc` con configuración para linter. Este archivo no
-  se debe cambiar.
-- `.gitignore` para ignorar `node_modules` u otras carpetas que no deban
-  incluirse en control de versiones (`git`).
-- `test/md-links.spec.js` debe contener los tests unitarios para la función
-  `mdLinks()`tu inplementación debe pasar estos tets.
+#### Valor de retorno
 
-### JavaScript API
+Un arreglo de objetos _usuario_ con la propiedad `stats`, la cual debe ser un
+objeto con las siguientes propiedades:
 
-El módulo debe poder importarse en otros scripts de Node.js y debe ofrecer la
-siguiente interfaz:
+* `percent`: Número entero entre 0 y 100 que indica el porcentaje de completitud
+  general del usuario con respecto a todos los cursos asignados a su cohort.
+* `exercises`: Objeto con tres propiedades:
+  - `total`: Número total de ejercicios autocorregidos presentes en cursos del
+    cohort.
+  - `completed`: Número de ejercicios autocorregidos completados por el usuario.
+  - `percent`: Porcentaje de ejercicios autocorregidos completados.
+* `reads`: Objeto con tres propiedades:
+  - `total`: Número total de lecturas presentes en cursos del cohort.
+  - `completed`: Número de lecturas completadas por el usuario.
+  - `percent`: Porcentaje de lecturas completadas.
+* `quizzes`: Objeto con cinco propiedades:
+  - `total`: Número total de quizzes presentes en cursos del cohort.
+  - `completed`: Número de quizzes completadas por el usuario.
+  - `percent`: Porcentaje de quizzes completadas.
+  - `scoreSum`: Suma de todas las puntuaciones (score) de los quizzes
+    completados.
+  - `scoreAvg`: Promedio de puntuaciones en quizzes completados.
 
-#### `mdLinks(path, options)`
+### `sortUsers(users, orderBy, orderDirection)`
 
-##### Argumentos
+La función `sortUsers()` se encarga de _ordenar_ la lista de usuarios creada con
+`computeUsersStats()` en base a `orderBy` y `orderDirection`.
 
-- `path`: Ruta absoluta o relativa al archivo o directorio. Si la ruta pasada es relativa, debe resolverse como relativa al directorio desde donde se invoca node - _currentworking directory_).
+#### Argumentos
 
-- `options`: Un objeto con las siguientes propiedades:
-  - `validate`: Valor que determina si se desea validar los links encontrados en el archivo. (tipo de dato booleano)
-  - `stats`: Valor que determina si se desea calcular los stats de de los links encontrados en el archivo. (tipo de dato booleano)
+* `users`: Arreglo de objetos creado con `computeUsersStats()`.
+* `orderBy`: String que indica el criterio de ordenado. Debe permitir ordenar
+  por nombre, porcentaje de completitud total, porcentaje de ejercicios
+  autocorregidos completados, porcentaje de quizzes completados, puntuación
+  promedio en quizzes completados, y porcentaje de lecturas completadas.
+* `orderDirection`: La dirección en la que queremos ordenar. Posibles valores:
+  `ASC` y `DESC` (ascendiente y descendiente).
 
-##### Valor de retorno
+#### Valor de retorno
 
-La función debe retornar una promesa (`Promise`) que resuelva a un arreglo
-(`Array`) de objetos (_Object_), donde cada objeto representa un link y contiene
-las siguientes propiedades:
+Arreglo de usuarios ordenado.
 
-- `href`: URL encontrada.
-- `text`: Texto que aparecía dentro del link (`<a>`).
-- `file`: Ruta del archivo donde se encontró el link.
+### `filterUsers(users, search)`
 
-#### Ejemplo
+#### Argumentos
 
-```js
-const mdLinks = require("md-links");
+* `users`: Arreglo de objetos creado con `computeUsersStats()`.
+* `search`: String de búsqueda.
 
-mdLinks("./some/example.md")
-  .then(links => {
-    // => [{ href, text, file }]
-  })
-  .catch(console.error);
+#### Valor de retorno
 
-mdLinks("./some/example.md", { validate: true })
-  .then(links => {
-    // => [{ href, text, file, status, ok }]
-  })
-  .catch(console.error);
+Nuevo arreglo de usuarios incluyendo solo aquellos que complan la condición de
+filtrado, es decir, aquellos que contengan el string _search_ en el nombre
+(`name`) del usuario.
 
-mdLinks("./some/example.md", { stats: true })
-  .then(links => {
-    // => [{ href, text, file, total, unique, domains }]
-  })
-  .catch(console.error);
+### `processCohortData(options)`
 
-mdLinks("./some/dir")
-  .then(links => {
-    // => [{ href, text, file }]
-  })
-  .catch(console.error);
-```
+Esta función es la que deberíamos estar al seleccionar un cohort y cada vez que
+el usuario cambia los criterios de ordenado y filtrado en la interfaz. Esta
+función debe invocar internamente a `computeUsersStats()`, `sortUsers()` y
+`filterUsers()`.
 
-### CLI (Línea de comando)
+#### Argumentos
 
-El ejecutable de nuestra aplicación debe poder ejecutarse de la siguiente
-manera a través de la terminal:
+* `options`: An object with the following keys:
+  - `cohort`: Objeto cohort (de la lista de cohorts)
+  - `cohortData`: Objeto con dos propiedades:
+    + `users`: Arreglo de usuarios miembros del cohort.
+    + `progress`: Objeto con data de progreso de cada usuario en el contexto de
+      un cohort en particular.
+  - `orderBy`: String con criterio de ordenado (ver `computeUsersStats`).
+  - `orderDirection`: String con dirección de ordenado (ver `computeUsersStats`).
+  - `search`: String de búsqueda (ver `filterUsers`)
 
-`md-links <path-to-file> [options]`
+#### Valor de retorno
 
-Por ejemplo:
+Nuevo arreglo de usuarios _ordenado_ y _filtrado_ con la propiedad `stats`
+añadida (ver `computeUsersStats`).
 
-```sh
-$ md-links ./some/example.md
-./some/example.md http://algo.com/2/3/ Link a algo
-./some/example.md https://otra-cosa.net/algun-doc.html algún doc
-./some/example.md http://google.com/ Google
-```
+### Tests
 
-El comportamiento por defecto no debe validar si las URLs responden ok o no,
-solo debe identificar el archivo markdown (a partir de la ruta que recibe como
-argumento), analizar el archivo Markdown e imprimir los links que vaya
-encontrando, junto con la ruta del archivo donde aparece y el texto
-que hay dentro del link (truncado a 50 caracteres).
+Tendrás también que completar las pruebas unitarias de estas funciones que se
+incluyen en el _boilerplate_.
 
-#### Options
+### Habilidades blandas
 
-##### `--validate`
+Para completar este proyecto deberás realizar una planificación general del
+proyecto, donde esperamos logres generar un plan paso a paso de cómo resolverás
+el proyecto. Deberás considerar las distintas secciones del data dashboard, los
+recursos y el tiempo que dispones.
 
-Si pasamos la opción `--validate`, el módulo debe hacer una petición HTTP para
-averiguar si el link funciona o no. Si el link resulta en una redirección a una
-URL que responde ok, entonces consideraremos el link como ok.
+Para lograrlo, deberás trabajar de manera colaborativa con tu compañera, para
+esto tienen que coordinarse en la construcción del producto, viendo de qué
+manera quieren trabajar y qué responsabilidades tendrá cada una para que así
+cumplan con los tiempos de entrega y ejecución.
 
-Por ejemplo:
+Para este proyecto busca instancias de code review, donde deberás buscar
+feedback de tu código con otro dupla, para que puedas mejorar el producto.
+Mientras más feedback recibas, mejor será su producto.
 
-```sh
-$ md-links ./some/example.md --validate
-./some/example.md http://algo.com/2/3/ ok 200 Link a algo
-./some/example.md https://otra-cosa.net/algun-doc.html fail 404 algún doc
-./some/example.md http://google.com/ ok 301 Google
-```
+Nos interesa ver tu capacidad de autoaprendizaje, por lo que esperamos que
+logren realizar el hacker edition, de esta manera podrás llevar tu producto al
+siguiente nivel.
 
-Vemos que el _output_ en este caso incluye la palabra `ok` o `fail` después de
-la URL, así como el status de la respuesta recibida a la petición HTTP a dicha
-URL.
-
-##### `--stats`
-
-Si pasamos la opción `--stats` el output (salida) será un texto con estadísticas
-básicas sobre los links.
-
-```sh
-$ md-links ./some/example.md --stats
-Total: 3
-Unique: 3
-```
-
-También podemos combinar `--stats` y `--validate` para obtener estadísticas que
-necesiten de los resultados de la validación.
-
-```sh
-$ md-links ./some/example.md --stats --validate
-Total: 3
-Unique: 3
-Broken: 1
-```
-
-## Entregables
-
-Módulo instalable via `npm install <github-user>/md-links`. Este módulo debe
-incluir tanto un ejecutable como una interfaz que podamos importar con `require`
-para usarlo programáticamente.
+Para finalizar, deberás presentar su data dashboard al resto del curso, para
+esto necesitarás que tu demo tenga acceso desde cualquier computador y que
+puedas realizar una presentación que permita a todos comprender lo realizado.
+Sabemos que puede ser una instancia difícil, esperamos que logres mostrar su
+trabajo y los demás lo comprendan.
 
 ## Hacker edition
 
-- Puedes agregar más estadísticas.
-- Integración continua con Travis o Circle CI.
+Desde Laboratoria creemos que para llevar tu data dashboard al siguiente nivel
+necesitas trabajar en equipo y buscar feedback.
 
-## Pistas / Tips / Recursos
+Para eso buscas instancias de feedback o code review, entregando tu opinión a
+los demás de forma constructiva, fundamentada y coherente con el fin de ayudar a
+los demás. Escuchas y valoras los comentarios y críticas de los demás,
+rescatando aspectos que te sirvan para su mejora.
 
-### Pistas
+Además, realizas un excelente trabajo con tu pareja y squad. Trabajas de manera
+coordinada y contribuyes al objetivo común, entregando ideas para la
+construcción del producto, respetando el trabajo de tu compañera. Además,
+entregas tu trabajo a tiempo y colaboras con el objetivo final del data
+dashboard, ayudando a tu compañera con los pendientes, con el fin de entregar un
+proyecto de calidad.
 
-- [Marked](https://github.com/markedjs/marked/blob/master/docs/USING_PRO.md)
-- [NPM](https://docs.npmjs.com/getting-started/what-is-npm)
-- [Publicar packpage](https://docs.npmjs.com/getting-started/publishing-npm-packages)
-- [Crear módulos en Node.js](https://docs.npmjs.com/getting-started/publishing-npm-packages)
-- [Leer un archivo](https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback)
-- [Leer un Directorio](https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback)
-- [Path](https://nodejs.org/api/path.html)
-- [Linea de comando CLI](https://medium.com/netscape/a-guide-to-create-a-nodejs-command-line-package-c2166ad0452e)
+Para el lado de UX Design, puedes crear y testesar un prototipo usando
+softwares de diseño y prototipado como Marvel, Invision, Figma, entre otros.
 
-### Tutoriales / NodeSchool workshoppers
+Features/características extra sugeridas:
 
-- [learnyounode](https://github.com/workshopper/learnyounode)
-- [how-to-npm](https://github.com/workshopper/how-to-npm)
-- [promise-it-wont-hurt](https://github.com/stevekane/promise-it-wont-hurt)
+* [Live API](https://api.laboratoria.la/)
+* Gráficas
+* Detalle de progreso de cada alumna (por curso)
+* Estadísticas de progreso de todo el cohort
 
-### Otros recursos
+## Entrega
 
-- [Acerca de Node.js - Documentación oficial](https://nodejs.org/es/about/)
-- [Node.js file system - Documentación oficial](https://nodejs.org/api/fs.html)
-- [Node.js http.get - Documentación oficial](https://nodejs.org/api/http.html#http_http_get_options_callback)
-- [Node.js - Wikipedia](https://es.wikipedia.org/wiki/Node.js)
-- [What exactly is Node.js? - freeCodeCamp](https://medium.freecodecamp.org/what-exactly-is-node-js-ae36e97449f5)
-- [¿Qué es Node.js y para qué sirve? - drauta.com](https://www.drauta.com/que-es-nodejs-y-para-que-sirve)
-- [¿Qué es Nodejs? Javascript en el Servidor - Fazt en YouTube](https://www.youtube.com/watch?v=WgSc1nv_4Gw)
-- [¿Simplemente qué es Node.js? - IBM Developer Works, 2011](https://www.ibm.com/developerworks/ssa/opensource/library/os-nodejs/index.html)
+El proyecto será _entregado_ subiendo tu código a GitHub (`commit`/`push`) y la
+interfaz será desplegada usando GitHub pages.
 
 ## Evaluación
 
 ### Tech
 
-| Habilidad              | Nivel esperado |
-| ---------------------- | -------------- |
-| **JavaScript**         |                |
-| Estilo                 | 4              |
-| Nomenclatura/semántica | 3              |
-| Funciones/modularidad  | 3              |
-| Estructuras de datos   | 2              |
-| Tests                  | 4              |  |
-| **SCM**                |                |
-| Git                    | 3              |
-| GitHub                 | 3              |
-| **CS**                 |                |
-| Lógica                 | 3              |
-| Arquitectura           | 3              |
-| Patrones/paradigmas    | n/a            |
+[tbd]
 
-### Habilidades Blandas
+### UX
 
-Para este proyecto esperamos que ya hayas alcanzado el nivel 4 en todas tus
-habilidades blandas. Te aconsejamos revisar la rúbrica:
+Para este proyecto queremos que intentes llegar al nivel 3 del skill User
+Centricity en tus UX skills. Adicionalmente, buscamos que llegues al nivel 2 en
+3 de las habilidades de visual design detalladas aquí y al nivel 3 en 2 de
+ellas. Te aconsejamos revisar la rúbrica.
 
-| Habilidad                                                  | Nivel esperado |
-| ---------------------------------------------------------- | -------------- |
-| Planificación y organización                               | 4              |
-| Autoaprendizaje                                            | 4              |
-| Solución de Problemas                                      | 4              |
-| Dar y recibir feedback                                     | 4              |
-| Adaptabilidad                                              | 4              |
-| Trabajo en equipo (trabajo colaborativo y responsabilidad) | 4              |
-| Comunicación eficaz                                        | 4              |
-| Presentaciones                                             | 4              |
+* **User centricity:** entiendes al usuario a través de la investigación,
+  realizas entrevistas y observas al usuario en ambientes controlados.
+* **Contraste:** diferencias colores de fondo y de texto en los componentes más
+  importantes como títulos y botones, diferenciándolos por su contraste.
+* **Alineación:** alineas los componentes más importantes como títulos, imágenes
+  y botones.
+* **Jerarquías:**  diferencias la importancia de algunos componentes en la
+  interfaz. Sin embargo, no hay consistencia en las jerarquías cuando se cambian
+  los tamaños de pantallas.
+* **Tipografías:** utilizas tipografías distintas a las que vienen por defecto.
+* **Color:** utilizas colores distintos a los que vienen por defecto. Usas
+  distintos colores para textos, botones, fondos, etc.
+* **Usabilidad:** aplicas al menos 3 de las 10 heurísticas de usabilidad de NN.
 
-## Checklist
+### Habilidades blandas
 
-### General
+Para este proyecto esperamos que ya hayas alcanzado el nivel 2 en todas tus
+habilidades blandas. También esperamos que alcances nivel 3 en por lo menos tres
+de estas habilidades. Sabemos que no siempre es fácil pero puedes lograrlo.
 
-- [ ] Entrega el link del módulo publicado en npm
+* **Trabajo en equipo:** trabajas de manera coordinada y contribuyes al objetivo
+  común, entregando ideas para la construcción del producto. Entregas tu trabajo
+  a tiempo y colaboras con el objetivo final del trabajo, con el fin de entregar
+  un producto de calidad.
+* **Dar y recibir feedback:** escuchas y valoras los comentarios y críticas de
+  los demás, rescatando aspectos que le sirvan para su mejora. Además, entregas
+  tu opinión a los demás de forma constructiva, fundamentada y coherente con el
+  fin de ayudar a tu squad o compañeras.
+* **Autoaprendizaje:** realizas preguntas sobre la materia, buscando aclarar
+  conceptos y resolver dudas. Además pides referencia de materiales que pueden
+  ser de utilidad para tu aprendizaje.
+* **Solución de problemas:** buscas soluciones alternativas a problemas de
+  diversa complejidad, a pesar de que no todas las soluciones puedan ser
+  correctas, buscas distintas fuentes para resolver el problema. Comienzas a
+  aplicar tu propia creatividad para resolver problemas independientemente.
+* **Planificación y manejo del tiempo:** utilizas herramientas de planificación,
+  como un calendario, trello, papelógrafo u otras, creando un plan paso a paso
+  de cómo quiere abarcar el reto o problema. Realizas una estimación realista
+  del tiempo.
+* **Adaptabilidad:** ante cambios inesperados o nuevos desafíos los recibes con
+  una actitud positiva, te adaptas y logras proponer soluciones creativas para
+  encontrar una nueva estrategia. De esta manera, logras asumir retos, enfrentas
+  los cambios repentinos, como trabajar con nuevos equipos o cambios en el
+  proyecto.
+* **Comunicación eficaz:** logras comunicar sus ideas a los demás, teniendo
+  capacidad de síntesis y articulando sus ideas con claridad.
+* **Presentaciones:** cualquier persona puede acceder al demo desde cualquier
+  equipo. El demo se ve y funciona correctamente, logrando priorizar qué mostrar
+  en el demo, pudiendo enseñar algunas veces menos elementos pero funcionales.
+  Realizas algún contacto visual con la audiencia, te apropias del espacio
+  físico y hablas con un volumen y ritmo que no interfieren con el entendimiento
+  de la audiencia.
 
-### `README.md`
+***
 
-- [ ] Un board con el backlog para la implementación de la librería.
-- [ ] Documentación técnica de la librería.
-- [ ] Guía de uso e instalación de la librería
+## Primeros pasos
 
-### Pruebas / tests
+1. Haz un _fork_ de este repositorio en tu cuenta de GitHub.
+2. Clona el repo en tu computadora.
+3. Instala las dependencias del proyecto con el comando `npm install`.
+4. Puedes ejecutar los tests con el comando `npm test` dentro de la carpeta del
+   proyecto.
 
-- [ ] Pruebas unitarias cubren un mínimo del 70% de statements, functions,
-      lines, y branches.
-- [ ] Pasa tests (y linters) (`npm test`).
+## Tips / Pistas
+
+* [Array en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array)
+* [Array.sort en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/sort)
+* [Array.map en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/map)
+* [Array.filter en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/filter)
+* [Array.reduce en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/reduce)
