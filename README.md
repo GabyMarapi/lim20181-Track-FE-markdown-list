@@ -44,7 +44,7 @@ Options:
 
 ![](https://fotos.subefotos.com/27cf2e1dac7624e0f6c4fd59432b7211o.png)
 
-## Modulo
+## Módulo
 
 `mdLinks(path, options)`
 
